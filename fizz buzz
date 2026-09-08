@@ -1,0 +1,21 @@
+for i in range(1, 101):
+    if i % 3 == 0 and i % 5 == 0:
+        print("FizzBuzz")
+    elif i % 3 == 0:
+        print("Fizz")
+    elif i % 5 == 0:
+        print("Buzz")
+    else:
+        print(i)
+```
+
+### How It Works
+* **`range(1, 101)`**: Counts numbers from 1 up to 100.
+* **`i % 3 == 0 and i % 5 == 0`**: Checks if the number is a multiple of both 3 and 5. If yes, it prints `FizzBuzz`.
+* **`i % 3 == 0`**: Checks if the number is a multiple of 3. If yes, it prints `Fizz`.
+* **`i % 5 == 0`**: Checks if the number is a multiple of 5. If yes, it prints `Buzz`.
+* **`else`**: If none of these rules match, it prints the number itself.
+
+<FollowUp>
+If you prefer this in a **different programming language** (like JavaScript, Java, or C++) or want to set a custom limit instead of 100, let me know!
+</FollowUp>
