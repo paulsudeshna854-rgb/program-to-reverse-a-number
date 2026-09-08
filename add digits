@@ -1,0 +1,27 @@
+import java.util.Scanner;
+
+public class CountDigits {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter an integer: ");
+        int num = scanner.nextInt();
+        
+        int originalNum = num;
+        int count = 0;
+
+        // Handle the edge case where the number itself is 0
+        if (num == 0) {
+            count = 1;
+        } else {
+            // Remove negative sign for calculation if applicable
+            num = Math.abs(num); 
+            while (num > 0) {
+                num /= 10; // Removes the last digit
+                count++;
+            }
+        }
+
+        System.out.println("The number of digits in " + originalNum + " is: " + count);
+        scanner.close();
+    }
+}
