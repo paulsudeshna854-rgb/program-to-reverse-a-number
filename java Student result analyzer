@@ -1,0 +1,150 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+class Student {
+    private String id;
+    private String name;
+    private int[] subjectMarks; 
+    
+    public Student(String id, String name, int[] subjectMarks) {
+        this.id = id;
+        this.name = name;
+        this.subjectMarks = subjectMarks;
+    }
+
+    public String getId() { return id; }
+    public String getName() { return name; }
+    public int[] getSubjectMarks() { return subjectMarks; }
+
+    public int calculateTotal() {
+        int total = 0;
+        for (int mark : subjectMarks) {
+            total += mark;
+        }
+        return total;
+    }
+
+    public double calculatePercentage() {
+        return (double) calculateTotal() / subjectMarks.length;
+    }
+
+    public char calculateGrade() {
+        double percentage = calculatePercentage();
+        if (percentage >= 90) return 'A';
+        if (percentage >= 80) return 'B';
+        if (percentage >= 70) return 'C';
+        if (percentage >= 60) return 'D';
+        return 'F';
+    }
+}
+
+class Analyzer {
+    private List<Student> studentList = new ArrayList<>();
+
+    public void addStudent(Student student) {
+        studentList.add(student);
+    }
+
+    public boolean isEmpty() {
+        return studentList.isEmpty();
+    }
+
+    public void displayReportCard() {
+        System.out.println("\n============================================ STUDENT REPORT CARD ============================================");
+        System.out.printf("%-10s | %-20s | %-10s | %-10s | %-10s | %-12s | %-12s | %-6s\n", 
+                "ID", "Name", "Sub 1", "Sub 2", "Sub 3", "Total (300)", "Percentage", "Grade");
+        System.out.println("-------------------------------------------------------------------------------------------------------------");
+        
+        for (Student s : studentList) {
+            int[] marks = s.getSubjectMarks();
+            System.out.printf("%-10s | %-20s | %-10d | %-10d | %-10d | %-12d | %-11.2f%% | %-6c\n",
+                    s.getId(), s.getName(), marks[0], marks[1], marks[2], 
+                    s.calculateTotal(), s.calculatePercentage(), s.calculateGrade());
+        }
+        System.out.println("=============================================================================================================");
+    }
+
+    // Generates high-level descriptive analytics for the class performance
+    public void displayClassAnalytics() {
+        if (studentList.isEmpty()) return;
+
+        double sumOfPercentages = 0;
+        double highestPercent = Double.MIN_VALUE;
+        double lowestPercent = Double.MAX_VALUE;
+        String topStudent = "";
+        String bottomStudent = "";
+
+        for (Student s : studentList) {
+            double p = s.calculatePercentage();
+            sumOfPercentages += p;
+
+            if (p > highestPercent) {
+                highestPercent = p;
+                topStudent = s.getName();
+            }
+            if (p < lowestPercent) {
+                lowestPercent = p;
+                bottomStudent = s.getName();
+            }
+        }
+
+        double classAverage = sumOfPercentages / studentList.size();
+
+        System.out.println("\n================= CLASS PERFORMANCE METRICS =================");
+        System.out.printf("Class Average Percentage : %.2f%%\n", classAverage);
+        System.out.printf("Highest Performer        : %s (%.2f%%)\n", topStudent, highestPercent);
+        System.out.printf("Lowest Performer         : %s (%.2f%%)\n", bottomStudent, lowestPercent);
+        System.out.println("=============================================================");
+    }
+}
+
+// Core execution workflow handler
+public class StudentResultAnalyzer {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Analyzer analyzer = new Analyzer();
+        
+        System.out.println("Welcome to the Student Result Analyzer CLI Tool");
+        System.out.print("How many students would you like to evaluate? ");
+        int totalStudents = scanner.nextInt();
+        scanner.nextLine(); // Clear the buffer newline character
+
+        for (int i = 1; i <= totalStudents; i++) {
+            System.out.println("\n--- Entering Details for Student #" + i + " ---");
+            
+            System.out.print("Enter Student ID: ");
+            String id = scanner.nextLine();
+            
+            System.out.print("Enter Student Name: ");
+            String name = scanner.nextLine();
+            
+            int[] marks = new int[3];
+            for (int j = 0; j < 3; j++) {
+                while (true) {
+                    System.out.print("Enter marks for Subject " + (j + 1) + " (0-100): ");
+                    int inputMark = scanner.nextInt();
+                    if (inputMark >= 0 && inputMark <= 100) {
+                        marks[j] = inputMark;
+                        break;
+                    }
+                    System.out.println("Invalid score! Marks must strictly fall between 0 and 100.");
+                }
+            }
+            scanner.nextLine(); // Clear buffer again
+            
+            analyzer.addStudent(new Student(id, name, marks));
+        }
+
+        // Generate processing outputs
+        if (!analyzer.isEmpty()) {
+            analyzer.displayReportCard();
+            analyzer.displayClassAnalytics();
+        } else {
+            System.out.println("No student data was submitted.");
+        }
+        
+        System.out.println("\nThank you for using the Analyzer Tool! Exiting program.");
+        scanner.close();
+    }
+}
